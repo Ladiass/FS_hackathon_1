@@ -3,21 +3,22 @@
     class Users{
         public static function Login($data){
             $user = $data["username"];
-            $password = $data["password"];
+            $password = $data["pass"];
             $user = Users::verify_user($user,true);
             if(!$user){
-                return "User Not Found!";
+                echo "User Not Found!";
                 die();
             }
             if(!password_verify($password , $user["password"])){
-                return "Username/Pass Wrong!";
+                echo "Username/Pass Wrong!";
                 die();
             };
+
             $_SESSION["user_details"] = $user;
             return 1;
         }
 
-        public static function Register($data ,$table= "users"){
+        public static function Register($data){
             global $conn;
             $username = $data["username"];
             $email = $data["email"];
@@ -40,12 +41,12 @@
                 die("Password and Password 2 must be same!");
             }
             $hash_password = password_hash($password,PASSWORD_DEFAULT);
-            $sql= "INSERT INTO ? (`username` , `email` , `password` , `image`) VALUES(?,?,?,?)";
+            $sql= "INSERT INTO users (`username` , `email` , `password` , `image`) VALUES(?,?,?,?)";
             $stmt = $conn->stmt_init();
             if(!$stmt->prepare($sql)){
                 die("Fails to Connect Database");
             }
-            $stmt->bind_param("sssss",$table,$username,$email,$password,$image_path);
+            $stmt->bind_param("ssss",$username,$email,$hash_password,$image_path);
             $stmt->execute();
             $_SESSION["status"] = "Successfully Register";
             $stmt->close();
@@ -57,18 +58,18 @@
             session_destroy();
         }
 
-        public static function verify_user($username ,$get_data = false ,$table = "users"){
+        public static function verify_user($username ,$get_data = false){
             global $conn;
-            $sql = "SELECT * FROM ? WHERE username = ?";
+            $sql = "SELECT * FROM users WHERE `users`.`username` = ?";
             $stmt = $conn->stmt_init();
             if(!$stmt->prepare($sql)){
                 return "Fails to Connect Database";
                 die();
             }
-            $stmt->bind_param("sss",$table,$username);
+            $stmt->bind_param("s",$username);
             $stmt->execute();
             $verify_user = $stmt->get_result()->fetch_assoc();
-            if(count($verify_user) <= 0 ){
+            if($verify_user == NULL){
                 return 0;
                 $stmt->close();
                 $conn->close();
@@ -85,16 +86,16 @@
 
         public static function verify_email($email ,$get_data = false ,$table = "users"){
             global $conn;
-            $sql = "SELECT * FROM ? WHERE email = ?";
+            $sql = "SELECT * FROM users WHERE email = ?";
             $stmt = $conn->stmt_init();
             if(!$stmt->prepare($sql)){
                 return "Fails to Connect Database";
                 die();
             }
-            $stmt->bind_param("sss",$table,$email);
+            $stmt->bind_param("s",$email);
             $stmt->execute();
             $verify_user = $stmt->get_result()->fetch_assoc();
-            if(count($verify_user) <= 0 ){
+            if($verify_user == NULL){
                 return 0;
                 $stmt->close();
                 $conn->close();
