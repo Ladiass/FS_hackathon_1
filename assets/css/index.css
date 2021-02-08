@@ -1,0 +1,47 @@
+header{
+    background: linear-gradient(to bottom ,rgba(59, 131, 246, 0.877) 65%, rgba(255, 255, 255, 0.3));
+
+}
+header img{
+    position: relative;
+    top:0px;
+    animation: virus_move 4s infinite;
+    animation-delay: calc(var(--i)*.5s);
+}
+header img:nth-child(1){
+    left: 10%;
+}
+header img:nth-child(2){
+    left: 50%;
+
+}
+header img:nth-child(3){
+    left: 7%;
+}
+header img:nth-child(4){
+    left: 75%;
+}
+header img:nth-child(5){
+    left: 25%;
+
+}
+header img:nth-child(6){
+    left: 60%;
+}
+header img:nth-child(7){
+    left: 82%;
+}
+@keyframes virus_move{
+    0%{
+        top:0px;
+    }
+    50%{
+        top: 10px;
+    }
+    85%{
+        top: 10px;
+    }
+    100%{
+        top: 0px;
+    }
+}
